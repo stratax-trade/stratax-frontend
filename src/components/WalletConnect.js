@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useWeb3 } from "../context/Web3Context";
-import { SUPPORTED_NETWORKS, DEFAULT_NETWORK } from "../config/contracts";
 import "./WalletConnect.css";
 
 const WalletConnect = () => {
@@ -10,11 +9,9 @@ const WalletConnect = () => {
     isConnected,
     isConnecting,
     chainId,
-    error,
     isMetaMaskInstalled,
     connectWallet,
     disconnectWallet,
-    switchNetwork,
     provider,
   } = useWeb3();
 
@@ -65,9 +62,6 @@ const WalletConnect = () => {
         return "ETH";
     }
   };
-
-  const currentNetwork = chainId ? SUPPORTED_NETWORKS[chainId] : null;
-  const isCorrectNetwork = chainId === DEFAULT_NETWORK;
 
   if (!isMetaMaskInstalled) {
     return (

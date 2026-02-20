@@ -14,14 +14,17 @@ const TradingViewChart = ({ symbol = "BINANCE:BTCUSDT" }) => {
     setIsLoading(true);
     setHasError(false);
 
+    // Capture container.current at the start of the effect for cleanup
+    const currentContainer = container.current;
+
     // Clear any existing widget
-    if (container.current) {
-      container.current.innerHTML = "";
+    if (currentContainer) {
+      currentContainer.innerHTML = "";
     }
 
     // Add a small delay to ensure DOM is ready
     const timer = setTimeout(() => {
-      if (!mounted || !container.current) return;
+      if (!mounted || !currentContainer) return;
 
       try {
         const script = document.createElement("script");
@@ -68,8 +71,8 @@ const TradingViewChart = ({ symbol = "BINANCE:BTCUSDT" }) => {
           }
         };
 
-        if (container.current) {
-          container.current.appendChild(script);
+        if (currentContainer) {
+          currentContainer.appendChild(script);
         }
       } catch (error) {
         console.error("Error loading TradingView chart:", error);
@@ -83,9 +86,9 @@ const TradingViewChart = ({ symbol = "BINANCE:BTCUSDT" }) => {
     return () => {
       mounted = false;
       clearTimeout(timer);
-      if (container.current) {
+      if (currentContainer) {
         try {
-          container.current.innerHTML = "";
+          currentContainer.innerHTML = "";
         } catch (error) {
           // Silently fail on cleanup
         }

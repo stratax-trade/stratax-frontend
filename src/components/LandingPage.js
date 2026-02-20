@@ -85,6 +85,7 @@ function LandingPage() {
             <a
               href="https://stratax.gitbook.io/stratax-docs/"
               target="_blank"
+              rel="noreferrer"
               className="nav-link"
             >
               Docs

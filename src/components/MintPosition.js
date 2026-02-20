@@ -396,7 +396,6 @@ const MintPosition = ({ onMintSuccess }) => {
 
         // Get 1inch swap data
         console.log("\n=== Getting 1inch Swap Data ===");
-        const borrowDecimals = TOKEN_INFO[borrowTokenSymbol]?.decimals || 18;
         const swapAmount = borrowAmount.toString();
 
         console.log("Getting swap data for:", {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useStrataxContract } from "../hooks/useStrataxContract";
-import { TOKENS, TOKEN_INFO, CONTRACTS } from "../config/contracts";
+import { TOKENS, CONTRACTS } from "../config/contracts";
 import { useWeb3 } from "../context/Web3Context";
 import { STRATAX_POSITION_NFT_ABI } from "../contracts/abi";
 import "./UnwindPosition.css";
@@ -22,9 +22,6 @@ const UnwindPosition = ({ selectedPosition, onClearSelection }) => {
     oneInchSwapData: "0x",
     minReturnAmount: "0",
   });
-
-  const [calculatedParams, setCalculatedParams] = useState(null);
-  const [calculating, setCalculating] = useState(false);
 
   // Auto-fill form when a position is selected
   useEffect(() => {
@@ -118,21 +115,6 @@ const UnwindPosition = ({ selectedPosition, onClearSelection }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCalculate = async () => {
-    setCalculating(true);
-    try {
-      const params = await calculateUnwindParams(
-        formData.collateralToken,
-        formData.borrowToken,
-      );
-      setCalculatedParams(params);
-    } catch (err) {
-      console.error("Calculation error:", err);
-    } finally {
-      setCalculating(false);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -164,7 +146,6 @@ const UnwindPosition = ({ selectedPosition, onClearSelection }) => {
         oneInchSwapData: "0x",
         minReturnAmount: "0",
       });
-      setCalculatedParams(null);
     } catch (err) {
       console.error("Transaction error:", err);
     }

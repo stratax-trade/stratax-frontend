@@ -1,0 +1,119 @@
+.network-selector {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.network-error {
+  padding: 6px 12px;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 6px;
+  color: #ff6b6b;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.network-selector-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  height: 44px;
+  background: rgba(76, 154, 255, 0.1);
+  border: 1px solid rgba(76, 154, 255, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.network-selector-button:hover {
+  background: rgba(76, 154, 255, 0.15);
+  border-color: rgba(76, 154, 255, 0.5);
+}
+
+.network-logo {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.network-name {
+  color: #ffffff;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s ease;
+  color: #a8b3cf;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+.network-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: rgba(21, 26, 61, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  z-index: 1000;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.network-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  color: #a8b3cf;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.network-option:hover {
+  background: rgba(76, 154, 255, 0.1);
+  color: #ffffff;
+}
+
+.network-option.active {
+  background: rgba(76, 154, 255, 0.15);
+  color: #4c9aff;
+}
+
+.network-option .network-name {
+  flex: 1;
+}
+
+.checkmark {
+  color: #4c9aff;
+  font-weight: bold;
+}

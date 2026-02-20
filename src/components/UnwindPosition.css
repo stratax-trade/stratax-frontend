@@ -1,0 +1,37 @@
+.unwind-position {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.unwind-position h2 {
+  margin-bottom: 0.5rem;
+}
+
+.selected-position-info {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.selected-position-info p {
+  margin: 0.25rem 0;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.selected-position-info p strong {
+  color: #ef4444;
+}
+
+.unwind-position .info-text {
+  color: #a8b3cf;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.unwind-position form {
+  width: 100%;
+}

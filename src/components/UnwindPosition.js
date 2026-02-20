@@ -6,7 +6,11 @@ import { useWeb3 } from "../context/Web3Context";
 import { STRATAX_POSITION_NFT_ABI } from "../contracts/abi";
 import "./UnwindPosition.css";
 
-const UnwindPosition = ({ selectedPosition, onClearSelection }) => {
+const UnwindPosition = ({
+  selectedPosition,
+  onClearSelection,
+  onAssetChange,
+}) => {
   const { networkId, account, provider } = useWeb3();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
@@ -49,8 +53,28 @@ const UnwindPosition = ({ selectedPosition, onClearSelection }) => {
         oneInchSwapData: "0x",
         minReturnAmount: "0",
       });
+
+      // Update chart for unwind position
+      if (onAssetChange) {
+        // Determine position type based on tokens
+        const isStablecoin = (symbol) => {
+          const stables = ["USDC", "USDT", "DAI", "FRAX", "LUSD"];
+          return stables.includes(symbol?.toUpperCase());
+        };
+
+        const collateralIsStable = isStablecoin(
+          selectedPosition.collateralToken,
+        );
+        const positionType = collateralIsStable ? "short" : "long";
+
+        onAssetChange(
+          selectedPosition.collateralToken,
+          selectedPosition.borrowToken,
+          positionType,
+        );
+      }
     }
-  }, [selectedPosition, networkId]);
+  }, [selectedPosition, networkId, onAssetChange]);
 
   // Fetch available NFTs
   useEffect(() => {

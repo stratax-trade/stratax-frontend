@@ -1,5 +1,5 @@
 /* global BigInt */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useWeb3 } from "../context/Web3Context";
 import { TOKENS, TOKEN_INFO, LEVERAGE_PRECISION } from "../config/contracts";
@@ -8,7 +8,7 @@ import { STRATAX_POSITION_NFT_ABI } from "../contracts/abi";
 import { get1inchSwapData } from "../utils/oneInch";
 import "./MintPosition.css";
 
-const MintPosition = ({ onMintSuccess }) => {
+const MintPosition = ({ onMintSuccess, onAssetChange }) => {
   const { networkId, account, provider, connectWallet } = useWeb3();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,6 +29,67 @@ const MintPosition = ({ onMintSuccess }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Update chart when tokens or position type changes
+  useEffect(() => {
+    if (onAssetChange) {
+      const networkTokens = TOKENS[networkId] || TOKENS[1] || {};
+      const usdcAddress = networkTokens.USDC;
+
+      let collateralSymbol = "WETH";
+      let borrowSymbol = "USDC";
+
+      // Determine symbols based on mode and position type
+      if (!showAdvanced) {
+        if (formData.positionType === "long") {
+          // Long: collateral is selected, borrow is USDC
+          if (formData.collateralToken) {
+            const found = Object.entries(networkTokens).find(
+              ([, addr]) =>
+                addr.toLowerCase() === formData.collateralToken.toLowerCase(),
+            );
+            if (found) collateralSymbol = found[0];
+          }
+          borrowSymbol = "USDC";
+        } else {
+          // Short: collateral is USDC, borrow is selected
+          collateralSymbol = "USDC";
+          if (formData.borrowToken) {
+            const found = Object.entries(networkTokens).find(
+              ([, addr]) =>
+                addr.toLowerCase() === formData.borrowToken.toLowerCase(),
+            );
+            if (found) borrowSymbol = found[0];
+          }
+        }
+      } else {
+        // Advanced mode: both tokens are manually selected
+        if (formData.collateralToken) {
+          const found = Object.entries(networkTokens).find(
+            ([, addr]) =>
+              addr.toLowerCase() === formData.collateralToken.toLowerCase(),
+          );
+          if (found) collateralSymbol = found[0];
+        }
+        if (formData.borrowToken) {
+          const found = Object.entries(networkTokens).find(
+            ([, addr]) =>
+              addr.toLowerCase() === formData.borrowToken.toLowerCase(),
+          );
+          if (found) borrowSymbol = found[0];
+        }
+      }
+
+      onAssetChange(collateralSymbol, borrowSymbol, formData.positionType);
+    }
+  }, [
+    formData.collateralToken,
+    formData.borrowToken,
+    formData.positionType,
+    showAdvanced,
+    networkId,
+    onAssetChange,
+  ]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

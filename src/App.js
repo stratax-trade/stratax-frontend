@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Web3Provider } from "./context/Web3Context";
 import WalletConnect from "./components/WalletConnect";
@@ -37,9 +37,12 @@ function TradingApp() {
     setSelectedPosition(null);
   };
 
-  const handleAssetChange = (collateralToken, borrowToken, positionType) => {
-    setSelectedAsset({ collateralToken, borrowToken, positionType });
-  };
+  const handleAssetChange = useCallback(
+    (collateralToken, borrowToken, positionType) => {
+      setSelectedAsset({ collateralToken, borrowToken, positionType });
+    },
+    [],
+  );
 
   const handleMintSuccess = () => {
     setRefreshPositions((prev) => prev + 1);
@@ -129,7 +132,10 @@ function TradingApp() {
 
                 <div className="tab-content">
                   {activeTab === "mint" ? (
-                    <MintPosition onMintSuccess={handleMintSuccess} />
+                    <MintPosition
+                      onMintSuccess={handleMintSuccess}
+                      onAssetChange={handleAssetChange}
+                    />
                   ) : activeTab === "open" ? (
                     <CreatePosition
                       selectedPosition={selectedPosition}
@@ -140,6 +146,7 @@ function TradingApp() {
                     <UnwindPosition
                       selectedPosition={selectedPosition}
                       onClearSelection={clearSelectedPosition}
+                      onAssetChange={handleAssetChange}
                     />
                   )}
                 </div>

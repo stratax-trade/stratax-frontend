@@ -1,5 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+} from "react-router-dom";
 import { Web3Provider } from "./context/Web3Context";
 import WalletConnect from "./components/WalletConnect";
 import CreatePosition from "./components/CreatePosition";
@@ -7,11 +13,15 @@ import MintPosition from "./components/MintPosition";
 import UnwindPosition from "./components/UnwindPosition";
 import PositionsList from "./components/PositionsList";
 import LandingPage from "./components/LandingPage";
+import WaitlistPage from "./components/WaitlistPage";
 import NetworkSelector from "./components/NetworkSelector";
 import TradingViewChart from "./components/TradingViewChart";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { getPositionChartSymbol } from "./utils/tradingViewSymbols";
 import "./App.css";
+
+const WAITLIST_MODE =
+  (process.env.REACT_APP_WAITLIST_MODE || "true").toLowerCase() === "true";
 
 function TradingApp() {
   const [activeTab, setActiveTab] = useState("mint");
@@ -194,11 +204,23 @@ function TradingApp() {
 }
 
 function App() {
+  if (WAITLIST_MODE) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/waitlist" element={<WaitlistPage />} />
+          <Route path="*" element={<Navigate to="/waitlist" replace />} />
+        </Routes>
+      </Router>
+    );
+  }
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/app" element={<TradingApp />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

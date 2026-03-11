@@ -14,6 +14,7 @@ import UnwindPosition from "./components/UnwindPosition";
 import PositionsList from "./components/PositionsList";
 import LandingPage from "./components/LandingPage";
 import WaitlistPage from "./components/WaitlistPage";
+import NftTokenDetailsPage from "./components/NftTokenDetailsPage";
 import NetworkSelector from "./components/NetworkSelector";
 import TradingViewChart from "./components/TradingViewChart";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -208,6 +209,8 @@ function App() {
     return (
       <Router>
         <Routes>
+          <Route path="/nft" element={<NftTokenDetailsPage />} />
+          <Route path="/nft/:tokenId" element={<NftTokenDetailsPage />} />
           <Route path="/waitlist" element={<WaitlistPage />} />
           <Route path="*" element={<Navigate to="/waitlist" replace />} />
         </Routes>
@@ -220,6 +223,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/app" element={<TradingApp />} />
+        <Route path="/nft" element={<NftTokenDetailsPage />} />
+        <Route path="/nft/:tokenId" element={<NftTokenDetailsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

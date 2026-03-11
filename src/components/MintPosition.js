@@ -34,7 +34,6 @@ const MintPosition = ({ onMintSuccess, onAssetChange }) => {
   useEffect(() => {
     if (onAssetChange) {
       const networkTokens = TOKENS[networkId] || TOKENS[1] || {};
-      const usdcAddress = networkTokens.USDC;
 
       let collateralSymbol = "WETH";
       let borrowSymbol = "USDC";

@@ -41,6 +41,10 @@
   color: #f8f9ff;
 }
 
+.waitlist-main-column {
+  min-width: 0;
+}
+
 .waitlist-logo {
   width: clamp(70px, 14vw, 96px);
   height: auto;
@@ -217,10 +221,174 @@
   color: #ff9ea6;
 }
 
+.waitlist-tokenomics {
+  margin-top: 1.35rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 1rem;
+}
+
+.waitlist-tokenomics h3 {
+  margin: 0;
+  color: #d9e8ff;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+}
+
+.waitlist-tokenomics-subtitle {
+  margin: 0.4rem 0 0.85rem;
+  color: #b7c7e8;
+  font-size: 0.92rem;
+}
+
+.waitlist-tokenomics-chart-wrap {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.waitlist-tokenomics-chart {
+  width: 220px;
+  height: 220px;
+}
+
+.waitlist-tokenomics-slice {
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+  transform-origin: 110px 110px;
+  opacity: 0.88;
+}
+
+.waitlist-tokenomics-slice:hover,
+.waitlist-tokenomics-slice.active {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+.waitlist-tokenomics-slice:focus,
+.waitlist-tokenomics-slice:focus-visible {
+  outline: none;
+}
+
+.waitlist-tokenomics-slice-label {
+  fill: #081327;
+  font-size: 10px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.waitlist-tokenomics-hole {
+  fill: rgba(9, 16, 38, 0.95);
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+}
+
+.waitlist-tokenomics-center-title {
+  fill: #c2d4ff;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.waitlist-tokenomics-center-value {
+  fill: #f4f8ff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.waitlist-tokenomics-legend {
+  margin-top: 0.8rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.45rem;
+}
+
+.waitlist-tokenomics-legend-item {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #eff5ff;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.58rem 0.72rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.waitlist-tokenomics-legend-item.active {
+  border-color: rgba(139, 194, 255, 0.56);
+  background: rgba(139, 194, 255, 0.1);
+}
+
+.waitlist-tokenomics-legend-item strong {
+  color: #dce8ff;
+  font-size: 0.86rem;
+}
+
+.waitlist-tokenomics-legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.waitlist-tokenomics-legend-label {
+  font-size: 0.86rem;
+  color: #d6e4ff;
+}
+
+.waitlist-tokenomics-details {
+  margin: 0.85rem 0 0;
+  color: #b9c9ea;
+  line-height: 1.58;
+  font-size: 0.9rem;
+}
+
+.waitlist-tokenomics-details strong {
+  color: #f0f6ff;
+  font-weight: 700;
+}
+
 .waitlist-faq {
   margin-top: 1.35rem;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   padding-top: 1rem;
+}
+
+@media (min-width: 1040px) {
+  .waitlist-content {
+    width: min(100%, 1120px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 390px);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .waitlist-main-column {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .waitlist-tokenomics {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    position: sticky;
+    top: 2rem;
+  }
+
+  .waitlist-faq {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0.2rem;
+  }
 }
 
 .waitlist-faq h3 {
@@ -261,5 +429,10 @@
 
   .waitlist-subtitle {
     margin-bottom: 1.2rem;
+  }
+
+  .waitlist-tokenomics-chart {
+    width: 196px;
+    height: 196px;
   }
 }

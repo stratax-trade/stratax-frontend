@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
 } from "react-router-dom";
 import { Web3Provider } from "./context/Web3Context";
@@ -13,11 +12,14 @@ import MintPosition from "./components/MintPosition";
 import UnwindPosition from "./components/UnwindPosition";
 import PositionsList from "./components/PositionsList";
 import LandingPage from "./components/LandingPage";
+import LeaderboardPage from "./components/LeaderboardPage";
+import TokenSalePage from "./components/TokenSalePage";
 import WaitlistPage from "./components/WaitlistPage";
 import NftTokenDetailsPage from "./components/NftTokenDetailsPage";
 import NetworkSelector from "./components/NetworkSelector";
 import TradingViewChart from "./components/TradingViewChart";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { SiteFooter, SiteHeader } from "./components/SiteChrome";
 import { getPositionChartSymbol } from "./utils/tradingViewSymbols";
 import "./App.css";
 
@@ -69,19 +71,17 @@ function TradingApp() {
   return (
     <Web3Provider>
       <div className="App">
-        <header className="App-header">
-          <div className="header-content">
-            <Link to="/" className="logo-link">
-              <h1>Stratax</h1>
-            </Link>
-            <div className="header-actions">
+        <SiteHeader
+          showLaunchApp={false}
+          extraActions={
+            <>
               <NetworkSelector />
               <WalletConnect />
-            </div>
-          </div>
-        </header>
+            </>
+          }
+        />
 
-        <main className="App-main">
+        <main className="App-main with-site-chrome">
           <div className="container">
             <div className="left-section">
               <div className="card chart-card">
@@ -196,9 +196,7 @@ function TradingApp() {
           </div>
         </main>
 
-        <footer className="App-footer">
-          <p>Stratax - Powered by Aave & 1inch</p>
-        </footer>
+        <SiteFooter />
       </div>
     </Web3Provider>
   );
@@ -209,6 +207,15 @@ function App() {
     return (
       <Router>
         <Routes>
+          <Route
+            path="/token-sale"
+            element={
+              <Web3Provider>
+                <TokenSalePage />
+              </Web3Provider>
+            }
+          />
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
           <Route path="/nft" element={<NftTokenDetailsPage />} />
           <Route path="/nft/:tokenId" element={<NftTokenDetailsPage />} />
           <Route path="/waitlist" element={<WaitlistPage />} />
@@ -223,6 +230,15 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/app" element={<TradingApp />} />
+        <Route
+          path="/token-sale"
+          element={
+            <Web3Provider>
+              <TokenSalePage />
+            </Web3Provider>
+          }
+        />
+        <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/nft" element={<NftTokenDetailsPage />} />
         <Route path="/nft/:tokenId" element={<NftTokenDetailsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

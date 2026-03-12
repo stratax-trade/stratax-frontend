@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { CONTRACTS, SUPPORTED_NETWORKS } from "../config/contracts";
 import { STRATAX_POSITION_NFT_ABI } from "../contracts/abi";
+import { SiteFooter, SiteHeader } from "./SiteChrome";
 import "./NftTokenDetailsPage.css";
 
 const DEFAULT_RPC_URL =
@@ -305,7 +306,8 @@ function NftTokenDetailsPage() {
   return (
     <div className="nft-page">
       <div className="nft-page-overlay" />
-      <main className="nft-shell">
+      <SiteHeader />
+      <main className="nft-shell with-site-chrome">
         <header className="nft-header">
           <div>
             <p className="nft-kicker">Stratax Position NFT</p>
@@ -426,6 +428,7 @@ function NftTokenDetailsPage() {
           </section>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }

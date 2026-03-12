@@ -2,6 +2,7 @@
 export const CONTRACTS = {
   STRATAX: "", // just a test address for displaying positions
   STRATAX_POSITION_NFT: "0xc12905b187686f757e03ecaa85cebb83a418a240", // Update with deployed NFT contract address
+  STRATAX_TOKEN_SALE: process.env.REACT_APP_STRATAX_TOKEN_SALE_ADDRESS || "", // StrataxTokenSale contract address
   FEE_COLLECTOR: "0x0000000000000000000000000000000000000000", // Update with deployed FeeCollector address
   USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC on mainnet
   WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", // WETH on mainnet

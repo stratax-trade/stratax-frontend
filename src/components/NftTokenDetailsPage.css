@@ -1,7 +1,8 @@
 .nft-page {
   min-height: 100vh;
   position: relative;
-  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(
       circle at 10% 20%,
@@ -25,7 +26,15 @@
 
 .nft-shell {
   max-width: 1080px;
+  width: 100%;
   margin: 0 auto;
+  padding: 24px 1rem 2rem;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.nft-page .site-footer {
   position: relative;
   z-index: 1;
 }
@@ -299,6 +308,10 @@
 }
 
 @media (max-width: 700px) {
+  .nft-shell {
+    padding-top: 16px;
+  }
+
   .nft-header {
     flex-direction: column;
   }

@@ -1,10 +1,12 @@
 import strataxArtifacts from "./Stratax.json";
 import strataxPositionNftArtifacts from "./StrataxPositionNft.json";
 import feeCollectorArtifacts from "./FeeCollector.json";
+import StrataxTokenSaleArtifacts from "./StrataxTokenSale.json";
 
 export const STRATAX_ABI = strataxArtifacts.abi;
 export const STRATAX_POSITION_NFT_ABI = strataxPositionNftArtifacts.abi;
 export const FEE_COLLECTOR_ABI = feeCollectorArtifacts.abi;
+export const STRATAX_TOKEN_SALE_ABI = StrataxTokenSaleArtifacts.abi;
 
 export const ERC20_ABI = [
   {

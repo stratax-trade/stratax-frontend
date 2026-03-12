@@ -1,0 +1,355 @@
+.token-sale-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(76, 154, 255, 0.2), transparent 38%),
+    radial-gradient(
+      circle at 88% 0%,
+      rgba(43, 211, 184, 0.16),
+      transparent 32%
+    ),
+    linear-gradient(160deg, #070b1f 0%, #0b1331 50%, #0a1030 100%);
+  color: #eef3ff;
+}
+
+.token-sale-shell {
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  flex: 1;
+}
+
+.token-sale-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.token-sale-kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  color: #8fa8ff;
+}
+
+.token-sale-header h1 {
+  margin: 8px 0;
+  font-size: clamp(28px, 4.6vw, 44px);
+}
+
+.token-sale-header p {
+  margin: 0;
+  color: #c7d4ff;
+  max-width: 700px;
+}
+
+.token-sale-back-link {
+  text-decoration: none;
+  color: #f3f8ff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px 14px;
+  font-weight: 700;
+}
+
+.token-sale-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.token-sale-info-grid article {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px;
+}
+
+.token-sale-info-grid span {
+  display: block;
+  color: #a9b9e6;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.token-sale-info-grid strong {
+  font-size: 18px;
+  color: #f5f8ff;
+}
+
+.token-sale-card {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  background: rgba(8, 14, 33, 0.78);
+  padding: 16px;
+}
+
+.token-sale-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.token-sale-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.token-sale-field label {
+  font-size: 13px;
+  color: #bdd0ff;
+}
+
+.token-sale-field input,
+.token-sale-field select {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #f2f7ff;
+}
+
+.token-sale-field input:focus,
+.token-sale-field select:focus {
+  outline: none;
+  border-color: #69a5ff;
+  box-shadow: 0 0 0 3px rgba(106, 165, 255, 0.2);
+}
+
+.token-sale-quote {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.token-sale-quote p {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px;
+  margin: 0;
+}
+
+.token-sale-quote span {
+  display: block;
+  font-size: 12px;
+  color: #a9b9e6;
+  margin-bottom: 4px;
+}
+
+.token-sale-quote strong {
+  font-size: 18px;
+  color: #f5f8ff;
+}
+
+.token-sale-status,
+.token-sale-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.token-sale-status {
+  background: rgba(76, 154, 255, 0.14);
+  border: 1px solid rgba(76, 154, 255, 0.3);
+  color: #d7e8ff;
+}
+
+.token-sale-error {
+  background: rgba(255, 107, 130, 0.14);
+  border: 1px solid rgba(255, 107, 130, 0.3);
+  color: #ffc2cf;
+}
+
+.token-sale-hash {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.token-sale-buy-btn {
+  grid-column: 1 / -1;
+  border: none;
+  border-radius: 12px;
+  padding: 13px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #031623;
+  background: linear-gradient(95deg, #56a4ff 0%, #35ddb7 100%);
+}
+
+.token-sale-buy-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tokenomics-panel {
+  margin-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 18px;
+}
+
+.tokenomics-panel h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.tokenomics-subtitle {
+  margin: 8px 0 12px;
+  color: #b9c9f5;
+}
+
+.tokenomics-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.tokenomics-chart-wrap {
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px;
+}
+
+.tokenomics-chart {
+  width: 240px;
+  height: 240px;
+}
+
+.tokenomics-slice {
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+  transform-origin: 120px 120px;
+  opacity: 0.85;
+}
+
+.tokenomics-slice:hover,
+.tokenomics-slice.active {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
+.tokenomics-slice:focus,
+.tokenomics-slice:focus-visible {
+  outline: none;
+}
+
+.tokenomics-slice-label {
+  fill: #081327;
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.tokenomics-hole {
+  fill: #0a1535;
+  stroke: rgba(255, 255, 255, 0.14);
+  stroke-width: 1;
+}
+
+.tokenomics-center-title {
+  fill: #dbe8ff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.tokenomics-center-value {
+  fill: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.tokenomics-legend {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.tokenomics-legend-item {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #eaf1ff;
+  padding: 9px 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tokenomics-legend-item.active {
+  border-color: rgba(106, 165, 255, 0.6);
+  background: rgba(76, 154, 255, 0.15);
+}
+
+.tokenomics-legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.tokenomics-legend-label {
+  font-size: 14px;
+  color: #dbe6ff;
+}
+
+.tokenomics-details {
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 12px;
+}
+
+.tokenomics-details h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.tokenomics-details p {
+  margin: 0;
+  color: #c7d4ff;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .token-sale-header {
+    flex-direction: column;
+  }
+
+  .token-sale-info-grid,
+  .token-sale-form,
+  .token-sale-quote {
+    grid-template-columns: 1fr;
+  }
+
+  .tokenomics-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .tokenomics-chart-wrap {
+    justify-self: center;
+  }
+}

@@ -1,22 +1,15 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "./WaitlistPage.css";
 
-const WAITLIST_FORM_ENDPOINT = process.env.REACT_APP_WAITLIST_FORM_ENDPOINT;
 const DISCORD_URL = process.env.REACT_APP_DISCORD_URL || "https://discord.gg";
 const TWITTER_URL =
-  process.env.REACT_APP_TWITTER_URL || "https://x.com/strataxfi";
+  process.env.REACT_APP_TWITTER_URL || "https://x.com/stratax_trade";
 const DOCS_URL =
   process.env.REACT_APP_DOCS_URL || "https://stratax.gitbook.io/stratax-docs/";
 const FAQ_ITEMS = [
   {
     question: "How do I get early access?",
-    answer:
-      "Join our Discord first. We announce access waves there before email updates.",
-  },
-  {
-    question: "Do I still need to submit my email?",
-    answer:
-      "Email is optional. It helps us send product and launch updates if you prefer inbox notifications.",
+    answer: "Join our Discord to stay updated on early access opportunities.",
   },
   {
     question: "Which networks are planned for launch?",
@@ -24,147 +17,265 @@ const FAQ_ITEMS = [
       "Stratax is focused on EVM networks. Follow the Docs and Discord announcements for final launch coverage.",
   },
   {
-    question: "Is there a token or airdrop right now?",
-    answer:
-      "There is no official airdrop announcement at this time. Always verify updates through our official links.",
+    question: "Is there a token sale or airdrop right now?",
+    answer: "Token sale is in the works",
   },
 ];
 
+const TOKENOMICS_ALLOCATIONS = [
+  {
+    id: "public-ico",
+    label: "Public ICO",
+    percent: 20,
+    tokens: "20,000,000",
+    color: "#56a4ff",
+    description:
+      "25% unlocked at TGE; remaining 75% unlocks linearly over 9 months.",
+  },
+  {
+    id: "strategic-private",
+    label: "Strategic/Private",
+    percent: 12,
+    tokens: "12,000,000",
+    color: "#35ddb7",
+    description:
+      "10% unlocked at TGE, then 3-month cliff and linear vesting over 18 months.",
+  },
+  {
+    id: "team",
+    label: "Team",
+    percent: 15,
+    tokens: "15,000,000",
+    color: "#ffcc66",
+    description:
+      "0% at TGE with a 12-month cliff, followed by linear vesting over 36 months.",
+  },
+  {
+    id: "advisors",
+    label: "Advisors",
+    percent: 3,
+    tokens: "3,000,000",
+    color: "#c48dff",
+    description:
+      "0% at TGE with a 6-month cliff, then linear vesting over 24 months.",
+  },
+  {
+    id: "ecosystem-incentives",
+    label: "Ecosystem Incentives",
+    percent: 22,
+    tokens: "22,000,000",
+    color: "#ff8f9d",
+    description:
+      "10% at TGE, with emissions distributed over 60 months to support protocol growth.",
+  },
+  {
+    id: "treasury-dao-reserve",
+    label: "Treasury/DAO Reserve",
+    percent: 20,
+    tokens: "20,000,000",
+    color: "#93f089",
+    description:
+      "0% at TGE, 6-month lock, then linear vesting over 48 months under DAO control.",
+  },
+  {
+    id: "liquidity-market-making",
+    label: "Liquidity & Market Making",
+    percent: 8,
+    tokens: "8,000,000",
+    color: "#ffd166",
+    description:
+      "50% unlocked at TGE, with the remaining 50% vesting linearly over 12 months.",
+  },
+];
+
+function polarToCartesian(cx, cy, radius, angleDeg) {
+  const angleRad = ((angleDeg - 90) * Math.PI) / 180;
+  return {
+    x: cx + radius * Math.cos(angleRad),
+    y: cy + radius * Math.sin(angleRad),
+  };
+}
+
+function describeArc(cx, cy, radius, startAngle, endAngle) {
+  const start = polarToCartesian(cx, cy, radius, endAngle);
+  const end = polarToCartesian(cx, cy, radius, startAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+  return `M ${cx} ${cy} L ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
+}
+
 function WaitlistPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  });
-  const [status, setStatus] = useState("idle");
-  const [message, setMessage] = useState("");
+  const [selectedTokenomicsId, setSelectedTokenomicsId] = useState(
+    TOKENOMICS_ALLOCATIONS[0].id,
+  );
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const tokenomicsSlices = useMemo(() => {
+    let startAngle = 0;
+    return TOKENOMICS_ALLOCATIONS.map((item) => {
+      const sweep = (item.percent / 100) * 360;
+      const endAngle = startAngle + sweep;
+      const path = describeArc(110, 110, 90, startAngle, endAngle);
+      const midAngle = startAngle + sweep / 2;
+      const labelPos = polarToCartesian(110, 110, 60, midAngle);
 
-  const saveLocalFallback = () => {
-    const current = JSON.parse(localStorage.getItem("strataxWaitlist") || "[]");
-    current.push({
-      ...formData,
-      createdAt: new Date().toISOString(),
+      const slice = {
+        ...item,
+        path,
+        labelX: labelPos.x,
+        labelY: labelPos.y,
+      };
+
+      startAngle = endAngle;
+      return slice;
     });
-    localStorage.setItem("strataxWaitlist", JSON.stringify(current));
-  };
+  }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setStatus("submitting");
-    setMessage("");
-
-    try {
-      if (WAITLIST_FORM_ENDPOINT) {
-        const response = await fetch(WAITLIST_FORM_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error("Form submission failed");
-        }
-      } else {
-        // Local fallback keeps signups available until a backend endpoint is configured.
-        saveLocalFallback();
-      }
-
-      setStatus("success");
-      setMessage("Thanks. You are on the waitlist and we will reach out soon.");
-      setFormData({ name: "", email: "" });
-    } catch (error) {
-      console.error("Waitlist submit error:", error);
-      setStatus("error");
-      setMessage("Something went wrong. Please try again in a moment.");
-    }
-  };
+  const selectedTokenomics = useMemo(
+    () =>
+      TOKENOMICS_ALLOCATIONS.find((item) => item.id === selectedTokenomicsId) ||
+      TOKENOMICS_ALLOCATIONS[0],
+    [selectedTokenomicsId],
+  );
 
   return (
     <div className="waitlist-page">
       <div className="waitlist-overlay" />
       <main className="waitlist-content">
-        <img
-          className="waitlist-logo"
-          src="/logo-no-text-no-background.png"
-          alt="Stratax logo"
-        />
-        <h1 className="waitlist-brand">Stratax</h1>
-        <p className="waitlist-brand-subtext">
-          leveraged trading powered by Aave and 1inch
-        </p>
-        <p className="waitlist-kicker">Stratax Early Access</p>
-        <h2 className="waitlist-title">Join the Waitlist</h2>
-        <p className="waitlist-subtitle">
-          We are onboarding users in controlled waves. Join our Discord for
-          priority updates and instant access announcements.
-        </p>
+        <div className="waitlist-main-column">
+          <img
+            className="waitlist-logo"
+            src="/logo-no-text-no-background.png"
+            alt="Stratax logo"
+          />
+          <h1 className="waitlist-brand">Stratax</h1>
+          <p className="waitlist-brand-subtext">
+            leveraged trading powered by Aave and 1inch
+          </p>
+          <p className="waitlist-kicker">Stratax Early Access</p>
+          <h2 className="waitlist-title">Join the Waitlist</h2>
+          <p className="waitlist-subtitle">
+            We are onboarding users in controlled waves. Join our Discord for
+            priority updates and instant access announcements.
+          </p>
 
-        <a
-          className="waitlist-discord-cta"
-          href={DISCORD_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Join via Discord
-        </a>
+          <a
+            className="waitlist-discord-cta"
+            href={DISCORD_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Join via Discord
+          </a>
 
-        <div className="waitlist-links" aria-label="Stratax links">
-          <a href={TWITTER_URL} target="_blank" rel="noopener noreferrer">
-            Twitter
-          </a>
-          <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">
-            Docs
-          </a>
+          <div className="waitlist-links" aria-label="Stratax links">
+            <a href={TWITTER_URL} target="_blank" rel="noopener noreferrer">
+              Twitter
+            </a>
+            <a href={DOCS_URL} target="_blank" rel="noopener noreferrer">
+              Docs
+            </a>
+          </div>
         </div>
 
-        <p className="waitlist-form-note">Prefer email updates instead?</p>
-
-        <form className="waitlist-form" onSubmit={handleSubmit}>
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            name="name"
-            type="text"
-            autoComplete="name"
-            placeholder="Jane Doe"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@company.com"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <button type="submit" disabled={status === "submitting"}>
-            {status === "submitting" ? "Submitting..." : "Get Early Access"}
-          </button>
-        </form>
-
-        {message && (
-          <p
-            className={`waitlist-message ${status === "success" ? "ok" : "error"}`}
-          >
-            {message}
+        <section className="waitlist-tokenomics" aria-label="STRX tokenomics">
+          <h3>STRX Tokenomics</h3>
+          <p className="waitlist-tokenomics-subtitle">
+            Fixed supply: 100,000,000 STRX
           </p>
-        )}
+
+          <div className="waitlist-tokenomics-chart-wrap">
+            <svg
+              className="waitlist-tokenomics-chart"
+              viewBox="0 0 220 220"
+              role="img"
+              aria-label="STRX token allocation pie chart"
+            >
+              {tokenomicsSlices.map((slice) => {
+                const isActive = selectedTokenomicsId === slice.id;
+                return (
+                  <g key={slice.id}>
+                    <path
+                      d={slice.path}
+                      fill={slice.color}
+                      className={`waitlist-tokenomics-slice ${isActive ? "active" : ""}`}
+                      onClick={() => setSelectedTokenomicsId(slice.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${slice.label} ${slice.percent}%`}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          setSelectedTokenomicsId(slice.id);
+                        }
+                      }}
+                    />
+                    <text
+                      x={slice.labelX}
+                      y={slice.labelY}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      className="waitlist-tokenomics-slice-label"
+                    >
+                      {slice.percent}%
+                    </text>
+                  </g>
+                );
+              })}
+              <circle
+                cx="110"
+                cy="110"
+                r="40"
+                className="waitlist-tokenomics-hole"
+              />
+              <text
+                x="110"
+                y="102"
+                textAnchor="middle"
+                className="waitlist-tokenomics-center-title"
+              >
+                STRX
+              </text>
+              <text
+                x="110"
+                y="122"
+                textAnchor="middle"
+                className="waitlist-tokenomics-center-value"
+              >
+                100%
+              </text>
+            </svg>
+          </div>
+
+          <div className="waitlist-tokenomics-legend" role="list">
+            {TOKENOMICS_ALLOCATIONS.map((item) => {
+              const isActive = selectedTokenomicsId === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={`waitlist-tokenomics-legend-item ${isActive ? "active" : ""}`}
+                  onClick={() => setSelectedTokenomicsId(item.id)}
+                >
+                  <span
+                    className="waitlist-tokenomics-legend-swatch"
+                    style={{ background: item.color }}
+                  />
+                  <span className="waitlist-tokenomics-legend-label">
+                    {item.label}
+                  </span>
+                  <strong>{item.percent}%</strong>
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="waitlist-tokenomics-details">
+            <strong>
+              {selectedTokenomics.label} ({selectedTokenomics.percent}% ·{" "}
+              {selectedTokenomics.tokens} STRX)
+            </strong>{" "}
+            {selectedTokenomics.description}
+          </p>
+        </section>
 
         <section
           className="waitlist-faq"

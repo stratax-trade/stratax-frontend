@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ethers } from "ethers";
 import "./LandingPage.css";
@@ -6,10 +6,86 @@ import { CONTRACTS, SUPPORTED_NETWORKS } from "../config/contracts";
 import { STRATAX_POSITION_NFT_ABI, FEE_COLLECTOR_ABI } from "../contracts/abi";
 
 function LandingPage() {
+  const landingRef = useRef(null);
+  const lastScrollVarsRef = useRef({
+    scrollY: "",
+    progress: "",
+    rotate: "",
+    drawProgress: "",
+  });
   const [stats, setStats] = useState({
     activePositions: 0,
     totalVolume: 0,
   });
+
+  useEffect(() => {
+    const updateScrollVars = () => {
+      if (!landingRef.current) {
+        return;
+      }
+
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const maxScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      const progress = Math.min(1, Math.max(0, scrollY / maxScroll));
+      const rotate = -7 + progress * 14;
+      const drawProgress = 8 + progress * 92;
+
+      const nextScrollY = String(Math.round(scrollY));
+      const nextProgress = progress.toFixed(4);
+      const nextRotate = `${rotate.toFixed(2)}deg`;
+      const nextDrawProgress = drawProgress.toFixed(2);
+
+      if (lastScrollVarsRef.current.scrollY !== nextScrollY) {
+        landingRef.current.style.setProperty("--scroll-y", nextScrollY);
+        lastScrollVarsRef.current.scrollY = nextScrollY;
+      }
+
+      if (lastScrollVarsRef.current.progress !== nextProgress) {
+        landingRef.current.style.setProperty("--scroll-progress", nextProgress);
+        lastScrollVarsRef.current.progress = nextProgress;
+      }
+
+      if (lastScrollVarsRef.current.rotate !== nextRotate) {
+        landingRef.current.style.setProperty("--scroll-rotate", nextRotate);
+        lastScrollVarsRef.current.rotate = nextRotate;
+      }
+
+      if (lastScrollVarsRef.current.drawProgress !== nextDrawProgress) {
+        landingRef.current.style.setProperty(
+          "--draw-progress",
+          nextDrawProgress,
+        );
+        lastScrollVarsRef.current.drawProgress = nextDrawProgress;
+      }
+    };
+
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId !== null) {
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(() => {
+        updateScrollVars();
+        rafId = null;
+      });
+    };
+
+    updateScrollVars();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateScrollVars);
+
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateScrollVars);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -66,8 +142,74 @@ function LandingPage() {
 
     fetchStats();
   }, []);
+
+  useEffect(() => {
+    const targets = Array.from(
+      document.querySelectorAll(".landing-page .reveal-on-scroll"),
+    );
+
+    if (targets.length === 0) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+        rootMargin: "0px 0px -8% 0px",
+      },
+    );
+
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="landing-page">
+    <div className="landing-page" ref={landingRef}>
+      <div className="scroll-3d-bg" aria-hidden="true">
+        <div className="bg-vignette" />
+        <div className="bg-aurora bg-aurora-one" />
+        <div className="bg-aurora bg-aurora-two" />
+        <div className="bg-aurora bg-aurora-three" />
+        <svg
+          className="bg-stock-trace bg-stock-trace-up"
+          viewBox="0 0 1000 280"
+        >
+          <polyline
+            points="0,198 24,192 48,196 72,188 96,194 120,182 144,189 168,176 192,186 216,172 240,180 264,168 288,176 312,162 336,171 360,158 384,170 408,142 422,206 438,164 462,152 486,161 510,148 534,156 558,143 582,154 606,138 630,146 654,132 678,141 702,128 726,139 750,116 766,188 784,126 808,112 832,121 856,106 880,116 904,102 928,114 952,96 976,108 1000,92"
+            pathLength="100"
+            preserveAspectRatio="none"
+          />
+        </svg>
+        <svg
+          className="bg-stock-trace bg-stock-trace-down"
+          viewBox="0 0 1000 280"
+        >
+          <polyline
+            points="0,86 24,92 48,88 72,96 96,90 120,102 144,95 168,108 192,99 216,114 240,106 264,120 288,112 312,126 336,118 360,132 384,121 408,154 424,86 440,136 464,148 488,140 512,154 536,146 560,160 584,152 608,166 632,158 656,172 680,163 704,178 728,168 752,194 768,116 786,186 810,198 834,188 858,203 882,194 906,210 930,198 954,216 978,202 1000,222"
+            pathLength="100"
+            preserveAspectRatio="none"
+          />
+        </svg>
+        <div className="shock-candle shock-candle-up" aria-hidden="true">
+          <span className="shock-candle-wick" />
+          <span className="shock-candle-body" />
+        </div>
+        <div className="shock-candle shock-candle-down" aria-hidden="true">
+          <span className="shock-candle-wick" />
+          <span className="shock-candle-body" />
+        </div>
+        <div className="bg-grid-plane" />
+        <div className="bg-grid-plane bg-grid-plane-back" />
+      </div>
+
       {/* Header Navigation */}
       <header className="landing-header">
         <div className="header-container">
@@ -76,6 +218,12 @@ function LandingPage() {
           </div>
 
           <nav className="nav-menu">
+            <Link to="/leaderboard" className="nav-link">
+              Leaderboard
+            </Link>
+            <Link to="/token-sale" className="nav-link">
+              Token Sale
+            </Link>
             <a href="#trade" className="nav-link">
               Trade
             </a>
@@ -104,7 +252,7 @@ function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section reveal-on-scroll is-visible">
         <div className="hero-content">
           <h1 className="hero-title">
             <h1 className="gradient-text">Stratax </h1>
@@ -119,6 +267,12 @@ function LandingPage() {
               Open App
               <span className="btn-arrow">→</span>
             </Link>
+            <Link to="/token-sale" className="btn btn-secondary">
+              Buy Tokens
+            </Link>
+            <Link to="/leaderboard" className="btn btn-secondary">
+              View Leaderboard
+            </Link>
             <a
               href="https://stratax.gitbook.io/stratax-docs/"
               target="_blank"
@@ -131,12 +285,12 @@ function LandingPage() {
 
           {/* Supported Networks */}
           <div className="supported-networks">
-            <p className="networks-label">Supported Networks</p>
+            <p className="networks-label">Comming Soon To</p>
             <div className="network-icons">
-              <div className="network-badge">Ethereum</div>
-              <div className="network-badge">Arbitrum</div>
+              <div className="network-badge">Base</div>
+              {/*               <div className="network-badge">Arbitrum</div>
               <div className="network-badge">Polygon</div>
-              <div className="network-badge">Optimism</div>
+              <div className="network-badge">Optimism</div> */}
             </div>
           </div>
         </div>
@@ -158,7 +312,7 @@ function LandingPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="stats-section">
+      <section className="stats-section reveal-on-scroll">
         <div className="stats-container">
           <div className="stat-card">
             <h3 className="stat-value">{stats.activePositions}</h3>
@@ -179,7 +333,7 @@ function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="features-section">
+      <section className="features-section reveal-on-scroll">
         <h2 className="section-title">Trade with Confidence</h2>
 
         <div className="features-grid">
@@ -240,7 +394,7 @@ function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="how-it-works-section">
+      <section className="how-it-works-section reveal-on-scroll">
         <h2 className="section-title">How It Works</h2>
         <div className="steps-container">
           <div className="step">
@@ -277,7 +431,7 @@ function LandingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="faq-section">
+      <section className="faq-section reveal-on-scroll">
         <h2 className="section-title">FAQ</h2>
         <div className="faq-container">
           <div className="faq-item">
@@ -321,7 +475,7 @@ function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="cta-section">
+      <section className="cta-section reveal-on-scroll">
         <div className="cta-content">
           <h2>Ready to Start?</h2>
           <p>Join the future of efficient leveraged trading</p>
@@ -333,7 +487,7 @@ function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="footer">
+      <footer className="footer reveal-on-scroll">
         <div className="footer-content">
           <div className="footer-section">
             <h4>Stratax</h4>

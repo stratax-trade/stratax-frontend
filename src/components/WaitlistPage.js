@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import "./WaitlistPage.css";
 
-const DISCORD_URL = process.env.REACT_APP_DISCORD_URL || "https://discord.gg";
+const DISCORD_URL =
+  process.env.REACT_APP_DISCORD_URL || "https://discord.gg/ekdnKGKGnq";
 const TWITTER_URL =
   process.env.REACT_APP_TWITTER_URL || "https://x.com/stratax_trade";
 const DOCS_URL =
